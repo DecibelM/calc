@@ -1,9 +1,6 @@
 package calc;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.System.out;
 
@@ -30,14 +27,15 @@ class Test {
         // Uncomment line by line to test
 
         // Tokenization ---------------------------
-        /*t("1 + 10", "1 + 10");  // Arguments are input and expected output
+        t("1 + 10", "1 + 10");  // Arguments are input and expected output
         t("1+ 10", "1 + 10");   // Expected is in fact a list [ "1", "+", "10"]
         t("1 +10", "1 + 10");
         t("1+10", "1 + 10");
         t("(1+10) ", "( 1 + 10 )");  // List is [ "(", "1", "+", "10", ")" ]
         t("2 *( 1+10) ", "2 * ( 1 + 10 )");
         t("(1 +2) /2 *( 1+10) ", "( 1 + 2 ) / 2 * ( 1 + 10 )");
-        */
+
+
 
         // Infix to postfix -----------------------
         /*
@@ -130,9 +128,10 @@ class Test {
     void t(String expr, String expected) {
         List<String> list = calculator.tokenize(expr);
         String result = String.join(" ", list);
+        out.println(list);
         out.println(result.equals(expected));
     }
-
+/*
     // Infix 2 postfix
     void i2p(String infix, String expected) {
         List<String> tokens = calculator.tokenize(infix);
@@ -148,5 +147,5 @@ class Test {
         double result = calculator.evalPostfix(postfix);
         out.println(result == expected);
     }
-
+*/
 }

@@ -64,12 +64,37 @@ class Calculator {
     // ------- Infix 2 Postfix ------------------------
 
     // TODO Methods
+    List<String> infix2postfix(List<String> infix) {
+        List<String> postfix = new ArrayList();
+        Deque<String> tmpStack = new ArrayDeque();
+        int x = 5;
+
+        for (String str : infix) {
+            if (Character.isDigit(str.charAt(0))){
+                postfix.add(str);
+            }else {
+                if (getPrecedence(str) < x){
+                    if (!tmpStack.isEmpty()){
+                        postfix.add(tmpStack.pop());
+                    }
+                    tmpStack.push(str);
+                    x = getPrecedence(str);
+                } else if (getPrecedence(str) > x){
+                    postfix.add(str);
+                } else {
+                    if (getAssociativity(str).equals(Assoc.LEFT)){
+                        postfix.add(tmpStack.pop());
+                        tmpStack.push(str);
+                    } else {
+                        tmpStack.push(str);
+                    }
+                }
+            }
+        }
 
 
-
-
-
-
+        return postfix;
+    }
 
 
     int getPrecedence(String op) {
@@ -105,17 +130,22 @@ class Calculator {
     // TODO Methods to tokenize
 
 
-    String[] allowedOP = {"+", "-", "/", "*", "^", "(", ")"};
-
-    List<String> tokenize(String str){
-        List<String> list = new ArrayList<String>();
+    List<String> tokenize(String expr) {
+        List<String> tokens = new ArrayList<String>();
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < str.length(); i++){
-            
+        for (int i = 0; i < expr.length(); i++) {
+            if (i != expr.length() - 1 && Character.isDigit(expr.charAt(i)) && Character.isDigit(expr.charAt(i + 1))) {
+                sb.append(expr.charAt(i));
+            } else {
+                sb.append(expr.charAt(i) + " ");
+            }
         }
 
-        return list;
-        }
+        String tokenString = sb.toString().trim();
+
+        tokens = Arrays.asList(tokenString.split("\\s+"));
+        return tokens;
+    }
 }
 

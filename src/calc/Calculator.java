@@ -104,4 +104,18 @@ class Calculator {
 
     // TODO Methods to tokenize
 
+
+    String[] allowedOP = {"+", "-", "/", "*", "^", "(", ")"};
+
+    List<String> tokenize(String str){
+        List<String> list = new ArrayList<String>();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < str.length(); i++){
+            
+        }
+
+        return list;
+        }
 }
+

@@ -91,10 +91,13 @@ class Calculator {
                 }
             }
         }
-
-
         return postfix;
     }
+
+
+    // TODO kontrollera infix2postfix fram tills getassociativity och gör sedan klart metoden (returna postfix).
+    // TODO dela därefter metoden i mindre delar där att undvika alltför mycket nesting.
+
 
 
     int getPrecedence(String op) {

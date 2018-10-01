@@ -63,41 +63,53 @@ class Calculator {
 
     // ------- Infix 2 Postfix ------------------------
 
-    // TODO Methods
-    List<String> infix2postfix(List<String> infix) {
+    List<String> infix2Postfix(List<String> infix) {
         List<String> postfix = new ArrayList();
         Deque<String> tmpStack = new ArrayDeque();
-        int x = 5;
+        int[] x = {0};
 
         for (String str : infix) {
-            if (Character.isDigit(str.charAt(0))){
+            if (Character.isDigit(str.charAt(0))) {
                 postfix.add(str);
-            }else {
-                if (getPrecedence(str) < x){
-                    if (!tmpStack.isEmpty()){
-                        postfix.add(tmpStack.pop());
-                    }
-                    tmpStack.push(str);
-                    x = getPrecedence(str);
-                } else if (getPrecedence(str) > x){
-                    postfix.add(str);
-                } else {
-                    if (getAssociativity(str).equals(Assoc.LEFT)){
-                        postfix.add(tmpStack.pop());
-                        tmpStack.push(str);
-                    } else {
-                        tmpStack.push(str);
-                    }
-                }
+            } else {
+                precendence(str, x, tmpStack, postfix);
             }
         }
+        emptyStack(tmpStack, postfix);
         return postfix;
     }
 
 
-    // TODO kontrollera infix2postfix fram tills getassociativity och gör sedan klart metoden (returna postfix).
-    // TODO dela därefter metoden i mindre delar där att undvika alltför mycket nesting.
+    Deque<String> precendence(String str, int[] x, Deque<String> tmpStack, List<String> postfix){
+        if (getPrecedence(str) > x[0]) {
+            tmpStack.push(str);
+            x[0] = getPrecedence(str);
+        } else if (getPrecedence(str) < x[0]) {
+            emptyStack(tmpStack, postfix);
+            tmpStack.push(str);
+            x[0] = getPrecedence(str);
+        } else if (getPrecedence(str) == 0){
+            associativity(str, tmpStack, postfix);
+        }
+        return tmpStack;
+    }
 
+
+    void associativity(String str, Deque<String> tmpStack, List<String> postfix){
+        if (getAssociativity(str).equals(Assoc.LEFT)) {
+            emptyStack(tmpStack, postfix);
+            tmpStack.push(str);
+        } else if(getAssociativity(str).equals(Assoc.RIGHT)){
+            tmpStack.push(str);
+        }
+    }
+
+
+    void emptyStack(Deque<String> tmpStack, List<String> postfix){
+        while (!tmpStack.isEmpty()){
+            postfix.add(tmpStack.pop());
+        }
+    }
 
 
     int getPrecedence(String op) {
@@ -112,10 +124,12 @@ class Calculator {
         }
     }
 
+
     enum Assoc {
         LEFT,
         RIGHT
     }
+
 
     Assoc getAssociativity(String op) {
         if ("+-*/".contains(op)) {

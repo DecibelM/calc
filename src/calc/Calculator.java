@@ -1,5 +1,8 @@
 package calc;
 
+import com.sun.org.apache.xerces.internal.xs.StringList;
+
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static java.lang.Double.NaN;
@@ -32,10 +35,10 @@ class Calculator {
         if (expr.length() == 0) {
             return NaN;
         }
-        // TODO List<String> tokens = tokenize(expr);
-        // TODO List<String> postfix = infix2Postfix(tokens);
-        // TODO double result = evalPostfix(postfix);
-        return 0; // result;
+        List<String> tokens = tokenize(expr);
+        List<String> postfix = infix2Postfix(tokens);
+        double result = evalPostfix(postfix);
+        return result; // result;
     }
 
     // ------  Evaluate RPN expression -------------------
@@ -64,12 +67,105 @@ class Calculator {
     // ------- Infix 2 Postfix ------------------------
 
     // TODO Methods
+    double evalPostfix(List<String> postfix){
+        double finalResult = 0;
+
+        Deque<Double> stack = new ArrayDeque<>();
+
+        for(String str: postfix){
+            if (Character.isDigit(str.charAt(0))){
+                stack.push(Double.valueOf(str));
+            }else{
+                double d1 = stack.pop();
+                double d2;
+                if(!stack.isEmpty()) {
+                    d2 = stack.pop();
+                }else{
+                    throw new IllegalArgumentException(MISSING_OPERAND);
+                }
+
+                double result = applyOperator(str, d1, d2);
+                stack.push(result);
+            }
+        }
+
+        if(stack.size() == 1) {
+            finalResult = stack.pop();
+        }else{
+            throw new IllegalArgumentException(MISSING_OPERATOR);
+        }
+
+        return finalResult;
+    }
+
+    List<String> infix2Postfix(List<String> infix){
+        List<String> postfix = new ArrayList<>();
+        Deque<String> tmpStack = new ArrayDeque<>();
+
+        int x = 0; //Inital value for priority.
+        int n = 0;
+
+        for(String str: infix) {
+            if (Character.isDigit(str.charAt(0))) { //Is digit
+                postfix.add(str);
+            }else if(str.equals("(")) {
+                tmpStack.push(str);
+                x = 1;
+                n++;
+            }else if(str.equals(")")){
+                //tmpStack.pop();
+                n--;
+                while(!tmpStack.isEmpty() && !tmpStack.peek().equals("(")){
+                    postfix.add(tmpStack.pop());
+
+                }
+                if(!tmpStack.isEmpty()){
+                    tmpStack.pop();
+                }
+
+                if(!tmpStack.isEmpty()){
+
+                    x = getPrecedence(tmpStack.peek());
+                } else{
+                    x = 0;
+                }
+            }else { //operator
+                if(getPrecedence(str) > x){
+                    tmpStack.push(str);
+                    x = getPrecedence(str); //Current priority.
+                }else if(getPrecedence(str)< x){
+
+                    popAll(postfix, tmpStack);
+                    tmpStack.push(str);
+                    x = getPrecedence(str);
+
+                }else{
+                    if(getAssociativity(str).equals(Assoc.LEFT)){
+                        popAll(postfix, tmpStack);
+                        tmpStack.push(str);
+                    }else if(getAssociativity(str).equals(Assoc.RIGHT)){
+                        tmpStack.push(str);
+                    }
+                }
+            }
+        }
+
+        if(n != 0){
+            throw new IllegalArgumentException(MISSING_OPERATOR);
+        }
+        popAll(postfix, tmpStack);
+
+        return postfix;
+    }
 
 
+    void popAll(List<String> postfix, Deque<String> tmpStack){
+        while(!tmpStack.isEmpty()){
+            postfix.add(tmpStack.pop());
+        }
 
-
-
-
+        return;
+    }
 
 
     int getPrecedence(String op) {
@@ -79,6 +175,8 @@ class Calculator {
             return 3;
         } else if ("^".contains(op)) {
             return 4;
+        } else if("(".contains(op)) {
+            return 1;
         } else {
             throw new RuntimeException(OP_NOT_FOUND);
         }
@@ -103,5 +201,26 @@ class Calculator {
     // ---------- Tokenize -----------------------
 
     // TODO Methods to tokenize
+    List<String> tokenize(String expr) {
+        List<String> tokens = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        expr = expr.trim();
+
+        for (int i = 0; i < expr.length(); i++) { //TODO expr (string) --> tokens (list av string, each character as an element in string form).
+            if (i != expr.length()-1 && Character.isDigit(expr.charAt(i)) && Character.isDigit(expr.charAt(i+1))) {
+                sb.append(expr.charAt(i));
+            } else {
+                sb.append(expr.charAt(i)).append(" ");
+            }
+        }
+
+        expr = sb.toString();
+        String[] tokensArr = expr.split("\\s+");
+
+        tokens = Arrays.asList(tokensArr);
+
+        return tokens;
+    }
+
 
 }

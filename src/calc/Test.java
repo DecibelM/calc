@@ -38,7 +38,7 @@ class Test {
 */
 
         // Infix to postfix -----------------------
-
+/*
         i2p("1+10", "1 10 +");
         i2p("1+2+3", "1 2 + 3 +");
         i2p("1+2-3", "1 2 + 3 -");
@@ -48,12 +48,12 @@ class Test {
         i2p("20/4/2", "20 4 / 2 /");
         i2p("4^3^2", "4 3 2 ^ ^");
         i2p("4^3*2", "4 3 ^ 2 *");
-        //i2p("(1+2)*3", "1 2 + 3 *");
-        //i2p("2^(1+1)", "2 1 1 + ^");
-
+        i2p("(1+2)*3", "1 2 + 3 *");
+        i2p("2^(1+1)", "2 1 1 + ^");
+*/
 
         // Evaluation ------------------------------
-        /*
+/*
         // A value
         e("123", 123);
 
@@ -95,16 +95,18 @@ class Test {
         // Mix priority and right and left associativity
         e(" 1 ^ 1 ^ 1 ^ 1  - 1", 0);
         e(" 4 - 2 - 1 ^ 2 ", 1);
-
+*/
         // Exceptions -----------------------------------
         try {
             e("1 / 0 ", 0);   // 0 just a dummy
         } catch (IllegalArgumentException e) {
+            out.println(e.getMessage());
             out.println(e.getMessage().equals(Calculator.DIV_BY_ZERO));
         }
         try {
             e("1 + 2 + ", 0);
         } catch (IllegalArgumentException e) {
+            out.println(e.getMessage());
             out.println(e.getMessage().equals(Calculator.MISSING_OPERAND));
         }
         try {
@@ -117,7 +119,7 @@ class Test {
         } catch (IllegalArgumentException e) {
             out.println(e.getMessage().equals(Calculator.MISSING_OPERATOR));
         }
-        */
+
 
     }
 
@@ -128,7 +130,7 @@ class Test {
     void t(String expr, String expected) {
         List<String> list = calculator.tokenize(expr);
         String result = String.join(" ", list);
-        out.println(list);
+        //out.println(list);
         out.println(result.equals(expected));
     }
 
@@ -137,16 +139,17 @@ class Test {
         List<String> tokens = calculator.tokenize(infix);
         List<String> postfix = calculator.infix2Postfix(tokens);
         String result = String.join(" ", postfix);
-        out.println(result);
+        //out.println(result);
         out.println(result.equals(expected));
     }
-/*
+
     // Evaluation
     void e(String infix, double expected) {
         List<String> tokens = calculator.tokenize(infix);
         List<String> postfix = calculator.infix2Postfix(tokens);
         double result = calculator.evalPostfix(postfix);
+        //out.println(result);
         out.println(result == expected);
     }
-*/
+
 }

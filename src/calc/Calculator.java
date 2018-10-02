@@ -42,6 +42,34 @@ class Calculator {
 
     // TODO Eval methods
 
+    double evalPostfix(List<String> postfix){
+        Deque<Double> stack = new ArrayDeque();
+        double finalAnswer;
+
+        for (String str : postfix){
+            if (Character.isDigit(str.charAt(0))) {
+                stack.push(Double.valueOf(str));
+            } else {
+                double d1 = stack.pop();
+                double d2;
+                if (!stack.isEmpty()) {
+                    d2 = stack.pop();
+                } else {
+                    throw new IllegalArgumentException(MISSING_OPERAND);
+                }
+                double result = applyOperator(str, d1, d2);
+                stack.push(result);
+            }
+        }
+        if (stack.size() != 1){
+            throw new IllegalArgumentException(MISSING_OPERATOR);
+        } else {
+            finalAnswer = stack.pop();
+        }
+        return finalAnswer;
+    }
+
+
     double applyOperator(String op, double d1, double d2) {
         switch (op) {
             case "+":
@@ -67,20 +95,47 @@ class Calculator {
         List<String> postfix = new ArrayList();
         Deque<String> tmpStack = new ArrayDeque();
         int[] x = {0};
+        int[] y = {0};
 
         for (String str : infix) {
             if (Character.isDigit(str.charAt(0))) {
                 postfix.add(str);
-            } else {
+            } else if ("(".contains(str)) {
+                y[0]++;
+                tmpStack.push(str);
+                x[0] = 1;
+            } else if (")".contains(str)){
+                y[0]--;
+                rightPara(str, x, tmpStack, postfix);
+            }else {
                 precendence(str, x, tmpStack, postfix);
             }
         }
         emptyStack(tmpStack, postfix);
+        if (y[0] != 0){
+            throw new IllegalArgumentException(MISSING_OPERATOR);
+        }
         return postfix;
     }
 
 
-    Deque<String> precendence(String str, int[] x, Deque<String> tmpStack, List<String> postfix){
+    Deque<String> rightPara (String str, int[] x, Deque<String> tmpStack, List<String> postfix){
+        while (!tmpStack.isEmpty() && !tmpStack.peek().equals("(")){
+            postfix.add(tmpStack.pop());
+        }
+        if (!tmpStack.isEmpty()) {
+            tmpStack.pop();
+        }
+        if (!tmpStack.isEmpty()){
+            x[0] = getPrecedence(tmpStack.peek());
+        } else {
+            x[0] = 0;
+        }
+        return tmpStack;
+    }
+
+
+    Deque<String> precendence(String str, int[] x, Deque<String> tmpStack, List<String> postfix) {
         if (getPrecedence(str) > x[0]) {
             tmpStack.push(str);
             x[0] = getPrecedence(str);
@@ -88,25 +143,25 @@ class Calculator {
             emptyStack(tmpStack, postfix);
             tmpStack.push(str);
             x[0] = getPrecedence(str);
-        } else if (getPrecedence(str) == 0){
+        } else if (getPrecedence(str) == x[0]) {
             associativity(str, tmpStack, postfix);
         }
         return tmpStack;
     }
 
 
-    void associativity(String str, Deque<String> tmpStack, List<String> postfix){
+    void associativity(String str, Deque<String> tmpStack, List<String> postfix) {
         if (getAssociativity(str).equals(Assoc.LEFT)) {
             emptyStack(tmpStack, postfix);
             tmpStack.push(str);
-        } else if(getAssociativity(str).equals(Assoc.RIGHT)){
+        } else if (getAssociativity(str).equals(Assoc.RIGHT)) {
             tmpStack.push(str);
         }
     }
 
 
-    void emptyStack(Deque<String> tmpStack, List<String> postfix){
-        while (!tmpStack.isEmpty()){
+    void emptyStack(Deque<String> tmpStack, List<String> postfix) {
+        while (!tmpStack.isEmpty()) {
             postfix.add(tmpStack.pop());
         }
     }
@@ -119,6 +174,8 @@ class Calculator {
             return 3;
         } else if ("^".contains(op)) {
             return 4;
+        } else if ("(".contains(op)) {
+            return 1;
         } else {
             throw new RuntimeException(OP_NOT_FOUND);
         }

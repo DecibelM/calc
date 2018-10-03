@@ -60,7 +60,7 @@ class Test {
 
         // Evaluation ------------------------------
 
-  /*      // A value
+       // A value
         e("123", 123);
 
         // Basic operations
@@ -74,9 +74,9 @@ class Test {
         e("1 / 2", 0.5);
         e("2 ^ 4 ", 16);
         e("2 ^ 0 ", 1);
-*/
+
         // Associativity
-/*        e("10 - 5 - 2", 3);  // (10-5)-2
+        e("10 - 5 - 2", 3);  // (10-5)-2
         e("20 / 2 / 2", 5);  // (20/2)/2
         e("4 ^ 2 ^ 2", 256);  // 4^(2^2)
 
@@ -87,11 +87,11 @@ class Test {
         e("1 + 30 / 3", 11);
         e("3 * 2 ^ 2", 12);
         e("3 ^ 2 * 2", 18);
-        */
+
 
         // Parentheses
-        //e("10 - (5 - 2)", 7);
-        //e("20 / (10 / 2)", 4);
+        e("10 - (5 - 2)", 7);
+        e("20 / (10 / 2)", 4);
         e("(3 ^ 2) ^ 2", 81);
         e("3 * (10 + 2)", 36);
         e("30 / (3 + 2)", 6);
@@ -129,7 +129,7 @@ class Test {
             out.println(e.getMessage().equals(Calculator.MISSING_OPERATOR));
         }
 
-
+       e("(1+2+3)", 6);
     }
 
 
@@ -147,18 +147,18 @@ class Test {
         List<String> tokens = calculator.tokenize(infix);
         List<String> postfix = calculator.infix2Postfix(tokens);
         String result = String.join(" ", postfix);
-        out.print(postfix);
+        //out.print(postfix);
         out.println(result.equals(expected));
     }
 
     // Evaluation
     void e(String infix, double expected) {
         List<String> tokens = calculator.tokenize(infix);
-        out.println(tokens);
+        //out.println(tokens);
         List<String> postfix = calculator.infix2Postfix(tokens);
         out.print(postfix);
         double result = calculator.evalPostfix(postfix);
-        out.println(result);
+       // out.println(result);
         out.println(result == expected);
     }
 

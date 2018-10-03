@@ -1,9 +1,6 @@
 package calc;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.System.out;
 
@@ -28,19 +25,20 @@ class Test {
 
 
         // Uncomment line by line to test
-
+/*
         // Tokenization ---------------------------
-        /*t("1 + 10", "1 + 10");  // Arguments are input and expected output
+        t("1 + 10", "1 + 10");  // Arguments are input and expected output
         t("1+ 10", "1 + 10");   // Expected is in fact a list [ "1", "+", "10"]
         t("1 +10", "1 + 10");
         t("1+10", "1 + 10");
         t("(1+10) ", "( 1 + 10 )");  // List is [ "(", "1", "+", "10", ")" ]
         t("2 *( 1+10) ", "2 * ( 1 + 10 )");
         t("(1 +2) /2 *( 1+10) ", "( 1 + 2 ) / 2 * ( 1 + 10 )");
-        */
+
+*/
 
         // Infix to postfix -----------------------
-        /*
+/*
         i2p("1+10", "1 10 +");
         i2p("1+2+3", "1 2 + 3 +");
         i2p("1+2-3", "1 2 + 3 -");
@@ -51,11 +49,11 @@ class Test {
         i2p("4^3^2", "4 3 2 ^ ^");
         i2p("4^3*2", "4 3 ^ 2 *");
         i2p("(1+2)*3", "1 2 + 3 *");
-        i2p("2^(1+1)", "2 1 1 + ^");
-        */
+        i2p("2^(1+1+1)", "2 1 1 + 1 + ^");
+*/
 
         // Evaluation ------------------------------
-        /*
+/*
         // A value
         e("123", 123);
 
@@ -83,7 +81,8 @@ class Test {
         e("1 + 30 / 3", 11);
         e("3 * 2 ^ 2", 12);
         e("3 ^ 2 * 2", 18);
-
+*/
+/*
         // Parentheses
         e("10 - (5 - 2)", 7);
         e("20 / (10 / 2)", 4);
@@ -92,21 +91,23 @@ class Test {
         e("30 / (3 + 2)", 6);
         e("(3 + 2) ^ 2", 25);
         e(" 2 ^ (1 + 1)", 4);
-        e(" ((((1 + 1))) * 2)", 4);
-
+        e(" ((((1 + 1 + 1))) * 2)", 6);
+*//*
         // Mix priority and right and left associativity
         e(" 1 ^ 1 ^ 1 ^ 1  - 1", 0);
         e(" 4 - 2 - 1 ^ 2 ", 1);
-
-        // Exceptions -----------------------------------
+*/
+/*        // Exceptions -----------------------------------
         try {
             e("1 / 0 ", 0);   // 0 just a dummy
         } catch (IllegalArgumentException e) {
+            out.println(e.getMessage());
             out.println(e.getMessage().equals(Calculator.DIV_BY_ZERO));
         }
         try {
             e("1 + 2 + ", 0);
         } catch (IllegalArgumentException e) {
+            out.println(e.getMessage());
             out.println(e.getMessage().equals(Calculator.MISSING_OPERAND));
         }
         try {
@@ -119,7 +120,7 @@ class Test {
         } catch (IllegalArgumentException e) {
             out.println(e.getMessage().equals(Calculator.MISSING_OPERATOR));
         }
-        */
+*/
 
     }
 
@@ -130,6 +131,7 @@ class Test {
     void t(String expr, String expected) {
         List<String> list = calculator.tokenize(expr);
         String result = String.join(" ", list);
+        //out.println(list);
         out.println(result.equals(expected));
     }
 
@@ -138,6 +140,7 @@ class Test {
         List<String> tokens = calculator.tokenize(infix);
         List<String> postfix = calculator.infix2Postfix(tokens);
         String result = String.join(" ", postfix);
+        out.println(result);
         out.println(result.equals(expected));
     }
 
@@ -146,6 +149,7 @@ class Test {
         List<String> tokens = calculator.tokenize(infix);
         List<String> postfix = calculator.infix2Postfix(tokens);
         double result = calculator.evalPostfix(postfix);
+        out.println(result);
         out.println(result == expected);
     }
 

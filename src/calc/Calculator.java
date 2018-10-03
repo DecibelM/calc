@@ -40,9 +40,7 @@ class Calculator {
 
     // ------  Evaluate RPN expression -------------------
 
-    // TODO Eval methods
-
-    double evalPostfix(List<String> postfix){
+    double evalPostfix(List<String> postfix){ /** This method returns the final results of the mathematical operations from the input **/
         Deque<Double> stack = new ArrayDeque();
         double finalAnswer;
 
@@ -70,7 +68,7 @@ class Calculator {
     }
 
 
-    double applyOperator(String op, double d1, double d2) {
+    double applyOperator(String op, double d1, double d2) { /** This method decides the mathematical operations. **/
         switch (op) {
             case "+":
                 return d1 + d2;
@@ -91,7 +89,7 @@ class Calculator {
 
     // ------- Infix 2 Postfix ------------------------
 
-    List<String> infix2Postfix(List<String> infix) {
+    List<String> infix2Postfix(List<String> infix) { /** This method converts the input to postfix  form. **/
         List<String> postfix = new ArrayList();
         Deque<String> tmpStack = new ArrayDeque();
         int[] x = {0};
@@ -119,7 +117,7 @@ class Calculator {
     }
 
 
-    Deque<String> rightPara (int[] x, Deque<String> tmpStack, List<String> postfix){
+    Deque<String> rightPara (int[] x, Deque<String> tmpStack, List<String> postfix){ /** This method handles parenthesis operators. **/
         while (!tmpStack.isEmpty() && !tmpStack.peek().equals("(")){
             postfix.add(tmpStack.pop());
         }
@@ -135,7 +133,7 @@ class Calculator {
     }
 
 
-    Deque<String> precendence(String str, int[] x, Deque<String> tmpStack, List<String> postfix) {
+    Deque<String> precendence(String str, int[] x, Deque<String> tmpStack, List<String> postfix) { /** This method handles the operators based on the precedence of them. **/
         if (getPrecedence(str) > x[0]) {
             tmpStack.push(str);
             x[0] = getPrecedence(str);
@@ -151,7 +149,7 @@ class Calculator {
     }
 
 
-    void associativity(String str, Deque<String> tmpStack, List<String> postfix) {
+    void associativity(String str, Deque<String> tmpStack, List<String> postfix) { /** This method handles the operators on the associativity of them. **/
         if (getAssociativity(str).equals(Assoc.LEFT)) {
             //emptyStack(tmpStack, postfix);
             postfix.add(tmpStack.pop());
@@ -162,14 +160,14 @@ class Calculator {
     }
 
 
-    void emptyStack(Deque<String> tmpStack, List<String> postfix) {
+    void emptyStack(Deque<String> tmpStack, List<String> postfix) { /** This method empties the stack completely. **/
         while (!tmpStack.isEmpty()) {
             postfix.add(tmpStack.pop());
         }
     }
 
 
-    int getPrecedence(String op) {
+    int getPrecedence(String op) { /** This method checks the precedence of the operator and returns it. **/
         if ("+-".contains(op)) {
             return 2;
         } else if ("*/".contains(op)) {
@@ -190,7 +188,7 @@ class Calculator {
     }
 
 
-    Assoc getAssociativity(String op) {
+    Assoc getAssociativity(String op) { /** This method checks the associativity of the operator and returns it. **/
         if ("+-*/".contains(op)) {
             return Assoc.LEFT;
         } else if ("^".contains(op)) {
@@ -203,11 +201,10 @@ class Calculator {
 
     // ---------- Tokenize -----------------------
 
-    // TODO Methods to tokenize
 
+    List<String> tokenize(String expr) { /** This method converts the input string into tokens representing numbers and operators.**/
 
-    List<String> tokenize(String expr) {
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList();
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < expr.length(); i++) {

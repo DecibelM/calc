@@ -49,7 +49,7 @@ class Test {
         i2p("4^3^2", "4 3 2 ^ ^");
         i2p("4^3*2", "4 3 ^ 2 *");
         i2p("(1+2)*3", "1 2 + 3 *");
-        i2p("2^(1+1)", "2 1 1 + ^");
+        i2p("2^(1+1+1)", "2 1 1 + 1 + ^");
 */
 
         // Evaluation ------------------------------
@@ -81,7 +81,8 @@ class Test {
         e("1 + 30 / 3", 11);
         e("3 * 2 ^ 2", 12);
         e("3 ^ 2 * 2", 18);
-
+*/
+/*
         // Parentheses
         e("10 - (5 - 2)", 7);
         e("20 / (10 / 2)", 4);
@@ -90,13 +91,13 @@ class Test {
         e("30 / (3 + 2)", 6);
         e("(3 + 2) ^ 2", 25);
         e(" 2 ^ (1 + 1)", 4);
-        e(" ((((1 + 1))) * 2)", 4);
-
+        e(" ((((1 + 1 + 1))) * 2)", 6);
+*//*
         // Mix priority and right and left associativity
         e(" 1 ^ 1 ^ 1 ^ 1  - 1", 0);
         e(" 4 - 2 - 1 ^ 2 ", 1);
 */
-        // Exceptions -----------------------------------
+/*        // Exceptions -----------------------------------
         try {
             e("1 / 0 ", 0);   // 0 just a dummy
         } catch (IllegalArgumentException e) {
@@ -119,7 +120,7 @@ class Test {
         } catch (IllegalArgumentException e) {
             out.println(e.getMessage().equals(Calculator.MISSING_OPERATOR));
         }
-
+*/
 
     }
 
@@ -139,7 +140,7 @@ class Test {
         List<String> tokens = calculator.tokenize(infix);
         List<String> postfix = calculator.infix2Postfix(tokens);
         String result = String.join(" ", postfix);
-        //out.println(result);
+        out.println(result);
         out.println(result.equals(expected));
     }
 
@@ -148,7 +149,7 @@ class Test {
         List<String> tokens = calculator.tokenize(infix);
         List<String> postfix = calculator.infix2Postfix(tokens);
         double result = calculator.evalPostfix(postfix);
-        //out.println(result);
+        out.println(result);
         out.println(result == expected);
     }
 

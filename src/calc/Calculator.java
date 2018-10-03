@@ -32,10 +32,10 @@ class Calculator {
         if (expr.length() == 0) {
             return NaN;
         }
-        // TODO List<String> tokens = tokenize(expr);
-        // TODO List<String> postfix = infix2Postfix(tokens);
-        // TODO double result = evalPostfix(postfix);
-        return 0; // result;
+        List<String> tokens = tokenize(expr);
+        List<String> postfix = infix2Postfix(tokens);
+        double result = evalPostfix(postfix);
+        return result; // result;
     }
 
     // ------  Evaluate RPN expression -------------------
@@ -106,7 +106,7 @@ class Calculator {
                 x[0] = 1;
             } else if (")".contains(str)){
                 y[0]--;
-                rightPara(str, x, tmpStack, postfix);
+                rightPara(x, tmpStack, postfix);
             }else {
                 precendence(str, x, tmpStack, postfix);
             }
@@ -119,7 +119,7 @@ class Calculator {
     }
 
 
-    Deque<String> rightPara (String str, int[] x, Deque<String> tmpStack, List<String> postfix){
+    Deque<String> rightPara (int[] x, Deque<String> tmpStack, List<String> postfix){
         while (!tmpStack.isEmpty() && !tmpStack.peek().equals("(")){
             postfix.add(tmpStack.pop());
         }
@@ -140,7 +140,8 @@ class Calculator {
             tmpStack.push(str);
             x[0] = getPrecedence(str);
         } else if (getPrecedence(str) < x[0]) {
-            emptyStack(tmpStack, postfix);
+            //emptyStack(tmpStack, postfix);
+            postfix.add(tmpStack.pop());
             tmpStack.push(str);
             x[0] = getPrecedence(str);
         } else if (getPrecedence(str) == x[0]) {
@@ -152,7 +153,8 @@ class Calculator {
 
     void associativity(String str, Deque<String> tmpStack, List<String> postfix) {
         if (getAssociativity(str).equals(Assoc.LEFT)) {
-            emptyStack(tmpStack, postfix);
+            //emptyStack(tmpStack, postfix);
+            postfix.add(tmpStack.pop());
             tmpStack.push(str);
         } else if (getAssociativity(str).equals(Assoc.RIGHT)) {
             tmpStack.push(str);

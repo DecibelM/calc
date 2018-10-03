@@ -136,7 +136,7 @@ class Test {
     // Infix 2 postfix
     void i2p(String infix, String expected) {
         List<String> tokens = calculator.tokenize(infix);
-        List<String> postfix = calculator.infix2Postfix(tokens);
+        List<String> postfix = calculator.infixToPostfix(tokens);
         String result = String.join(" ", postfix);
         out.println(result.equals(expected));
     }
@@ -144,7 +144,7 @@ class Test {
     // Evaluation
     void e(String infix, double expected) {
         List<String> tokens = calculator.tokenize(infix);
-        List<String> postfix = calculator.infix2Postfix(tokens);
+        List<String> postfix = calculator.infixToPostfix(tokens);
         double result = calculator.evalPostfix(postfix);
         out.println(result == expected);
     }

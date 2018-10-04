@@ -40,7 +40,7 @@ class Calculator {
 
     // ------  Evaluate RPN expression -------------------
 
-    double evalPostfix(List<String> postfix){ /** This method returns the final results of the mathematical operations from the input **/
+    double evalPostfix(List<String> postfix){  /** This method returns the final results of the mathematical operations from the input **/
         Deque<Double> stack = new ArrayDeque();
         double finalAnswer;
 
@@ -117,7 +117,7 @@ class Calculator {
     }
 
 
-    Deque<String> rightPara (int[] x, Deque<String> tmpStack, List<String> postfix){ /** This method handles parenthesis operators. **/
+    void rightPara (int[] x, Deque<String> tmpStack, List<String> postfix){ /** This method handles parenthesis operators. **/
         while (!tmpStack.isEmpty() && !tmpStack.peek().equals("(")){
             postfix.add(tmpStack.pop());
         }
@@ -129,7 +129,6 @@ class Calculator {
         } else {
             x[0] = 0;
         }
-        return tmpStack;
     }
 
 
@@ -138,8 +137,9 @@ class Calculator {
             tmpStack.push(str);
             x[0] = getPrecedence(str);
         } else if (getPrecedence(str) < x[0]) {
+            emptyToPara(tmpStack, postfix);
             //emptyStack(tmpStack, postfix);
-            postfix.add(tmpStack.pop());
+            //postfix.add(tmpStack.pop());
             tmpStack.push(str);
             x[0] = getPrecedence(str);
         } else if (getPrecedence(str) == x[0]) {
@@ -148,11 +148,18 @@ class Calculator {
         return tmpStack;
     }
 
+    Deque<String> emptyToPara(Deque<String> tmpStack, List<String> postfix){
+        while (!tmpStack.isEmpty() && !tmpStack.peek().equals("(")){
+            postfix.add(tmpStack.pop());
+        }
+        return tmpStack;
+    }
 
     void associativity(String str, Deque<String> tmpStack, List<String> postfix) { /** This method handles the operators on the associativity of them. **/
         if (getAssociativity(str).equals(Assoc.LEFT)) {
+            emptyToPara(tmpStack, postfix);
             //emptyStack(tmpStack, postfix);
-            postfix.add(tmpStack.pop());
+            //postfix.add(tmpStack.pop());
             tmpStack.push(str);
         } else if (getAssociativity(str).equals(Assoc.RIGHT)) {
             tmpStack.push(str);
